@@ -1,51 +1,54 @@
-# Titanic - Machine Learning from Disaster
-Start here! Predict survival on the Titanic and get familiar with ML basics  
-kaggle: https://www.kaggle.com/c/titanic
-預測鐵達尼號乘客生存情形
+# House Prices - Advanced Regression Techniques
+Predict sales prices and practice feature engineering, RFs, and gradient boosting.  
+kaggle: https://www.kaggle.com/c/house-prices-advanced-regression-techniques
+預測房價
 
 ## 成績
 
- * Test Acc : 0.79665
- * Top 5% (665/13,847)
+ * Test RMSE : 0.0.12656
+ * Top 20% (814/4,496)
 
 
 ## 作法
 
 1. ### EDA
- * 乘客存活比例、男女/年齡分布
- * 存活情形與其他變數的相關性
+ * 價格分布與常態分佈
+ * 房價與其他變數的相關性
  * 欄位缺值比例
  * 數值類變數的分布情形
 
-2. ### 特徵工程
- * 製造特徵: 
-    * 性別 => 男性為1、女性為0 
-    * 姓名單字數
-    * 缺值欄位數
-    * 年齡 => 各年齡層組別
-    * 姓名中的稱謂字 ('Mr.', 'Mrs.', 'Miss.', 'Master.')
- * One-Hot Encoding (年齡組、Pclass、Embarked) 
+
+2. ### 預處理
+ * 極端值訓練資料排除
  * 處理遺漏值
   * 缺值比例過高欄位 => 移除
-  * 類別欄位、年齡 => 補'none'
-  * Fare => 補訓練資料平均數
+  * 類別欄位: 該欄位訓練資料缺值3筆以上 => 補'none'，否則補眾數
+  * 數值欄位: 訓練資料眾數為0補0、否則補中位數
+  * 車庫年份 => 補建造年份
+ * 製造特徵: 
+    * na 欄位數量
+    * 屋齡、整修、車庫年齡
+    * 出售年份 => 各年齡層組別
+ * One-Hot Encoding 
+ 
 
 3. ### 標準化、切割訓練/測試/驗證集
- * 以訓練資料為基準將 PassengerId, Survived 以外其他欄位標準化
+ * 以訓練資料為基準將 Id, SalePrice 以外其他欄位標準化
  * 切割: train set => 85%, valid set => 15%
+ * y_train、y_valid 取log 方便之後計算
+
 
 4. ### 單一模型訓練、預測 (Grid search 找最佳參數)
- * Logistic
- * KNN
- * SVM
- * Decision Tree
- * Random Forest 
+ * OLS
+ * Ridge
+ * Lasso
+ * XGBoost
+ * CatBoost
 
 5. ### 集成模型
- * Voting: 前面的5個模型1人1票 (VotingClassifier)
- * Stacking: 前面的5個模型 + LogisticRegression (StackingClassifier)
+ * Voting: 除OLS以外的4個模型平均or 加權平均(VotingRegressor)
+ * Stacking: 除OLS以外的4個模型 + LinearRegression (StackingRegressor)
 
 6. ### Neural Network Model (PyTorch)
- * Model:　Linear + Dropout + ReLU + sigmoid
- * optimizer: SGD + momentum + weight_decay / Adam /AdamW
- * Voting: 1模型1票多數決
+ * Model:　Linear + Dropout + ReLU
+ * optimizer: Adam /AdamW
